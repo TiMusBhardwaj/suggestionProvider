@@ -42,7 +42,7 @@ public class AutoCompleteServiceImpl implements AutoCompleteService {
 		logger.info("-----Populating Trie Start--------");
 		try(Stream<String> cities = cityInfoRepository.getAllCities()){
 			Trie trie = new Trie();
-			cities.filter(x -> x != null && !x.isEmpty()).forEach(x->trie.insert(x.toUpperCase()));
+			cities.filter(x -> x != null && !x.isEmpty()).forEach(x->trie.insert(x.trim().toUpperCase()));
 			this.trie = trie;
 			
 		}

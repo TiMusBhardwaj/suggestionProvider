@@ -61,13 +61,13 @@ public class CommonConfig {
 			if (!logger.isDebugEnabled()) {
 				return;
 			}
-			logger.debug("Beans Loaded by Spring-------------");
+			logger.debug("Beans Loaded by Spring-------------------");
 
 			String[] beanNames = ctx.getBeanDefinitionNames();
 			for (String beanName : beanNames) {
 				logger.debug(beanName);
 			}
-			logger.debug("---------------------------------");
+			logger.debug("-----------------------------------------");
 		};
 	}
 

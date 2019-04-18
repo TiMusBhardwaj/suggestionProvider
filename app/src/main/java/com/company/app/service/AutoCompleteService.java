@@ -11,11 +11,11 @@ import java.util.List;
 public interface AutoCompleteService {
 	
 	/**
-	 * @param start
+	 * @param prefix
 	 * @param requestedCount
 	 * @return list of suggestion based on prefix provided.
 	 * List equal to requestedCountor number of result present whichever is smaller.
 	 */
-	public List<String> getSuggestion(String start, int requestedCount);
+	public List<String> getSuggestion(String prefix, int requestedCount);
 	
 }

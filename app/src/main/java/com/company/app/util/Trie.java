@@ -35,12 +35,16 @@ public class Trie {
         size = 0;
     }
 
+    /**
+     * This Method add the input string to trie by breaking it down in char array.
+     * @param word
+     */
     public void insert(String word) {
     	logger.debug("Adding [ {} ] to trie ", word);
         //word = word.toLowerCase();
         if (word == null) throw new IllegalArgumentException();
         TrieNode node = root;
-        char[] charArr = word.toCharArray();
+        char[] charArr = word.trim().toCharArray();
         for (char c : charArr) {
         	logger.trace("Current char [{}], currentnode :  {}", c, node);
         	
@@ -52,28 +56,8 @@ public class Trie {
         size++;
     }
 
-    public String find(String word) {
-        TrieNode node = root;
-        char[] charArr = word.toCharArray();
-        for (char c : charArr) {
-            if (!node.children.containsKey(c)) return "";
-            node = node.children.get(c);
-        }
-        return node.value;
-    }
-
-    public List<String> getPrefixes(TrieNode node) {
-        ArrayList<String> results = new ArrayList<String>();
-        if (node.full) results.add(node.value);
-        for (Entry<Character, TrieNode> child : node.children.entrySet()) {
-            TrieNode val = child.getValue();
-            List<String> childPrefixes = getPrefixes(val);
-            results.addAll(childPrefixes);
-        }
-        return results;
-    }
-    
-    
+    //TODO: Instead of passing requestcount and 
+    //incrementing threadlocal should decrement threadlocal to zero
     public List<String> getPrefixes(TrieNode node,  int requestedCount) {
     	logger.debug("Get Prefixed for [ {} ] , current requestCount :{}", node, requestedCount);
         ArrayList<String> results = new ArrayList<String>();
@@ -99,21 +83,22 @@ public class Trie {
         return results;
     }
     
-    public List<String> autoComplete(String prefix) {
-        TrieNode node = root;
-        List<String> result = new ArrayList<String>();
-        for (char c : prefix.toCharArray()) {
-            if (!node.children.containsKey(c)) return result;
-            node = node.children.get(c);
-        }
-        result = getPrefixes(node);
-        return result;
-    }
     
+    
+    /**
+	 * @param prefix
+	 * @param requestedCount
+	 * @return list of suggestion based on prefix provided.
+	 * List equal to requestedCountor number of result present whichever is smaller.
+	 */
     public List<String> autoComplete(String prefix, int requestedCount) {
     	logger.debug("AutoComplete request received for [ {} ] , requestCount :{}", prefix, requestedCount);
         TrieNode node = root;
         List<String> result = new ArrayList<String>();
+        if (requestedCount < 1 || prefix == null || prefix.trim().isEmpty()) {
+        	logger.debug("Return Empty List "); 
+        	return result;
+        }
         for (char c : prefix.toCharArray()) {
         	logger.trace("Current char [{}], currentnode :  {}", c, node);
             if (!node.children.containsKey(c)) return result;
