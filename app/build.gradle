@@ -1,0 +1,43 @@
+plugins {
+	id 'org.springframework.boot' version '2.1.4.RELEASE'
+	id 'java'
+}
+
+apply plugin: 'io.spring.dependency-management'
+
+group = 'com.company'
+version = '0.0.0.1'
+sourceCompatibility = '1.8'
+
+repositories {
+	mavenCentral()
+}
+
+configurations {
+	all {
+		exclude group: 'org.springframework.boot', module: 'spring-boot-starter-logging'
+	}
+}
+dependencies {
+	
+	//Web , Rest
+	implementation 'org.springframework.boot:spring-boot-starter-jersey'
+	implementation 'org.springframework.boot:spring-boot-starter-web'
+	
+	//Cache
+	implementation 'org.springframework.boot:spring-boot-starter-cache'
+	
+	//DATABASE AND DB ACCESS ABSTRACTIONS
+	runtimeOnly 'com.h2database:h2'
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+	
+	//LOGGING AND TRACING
+	implementation 'org.springframework.cloud:spring-cloud-starter-sleuth:2.1.0.RELEASE'
+	implementation 'org.springframework.boot:spring-boot-starter-log4j2'
+	
+	//Rest Documentation With Ui
+	implementation 'io.springfox:springfox-swagger-ui:2.9.2'
+	implementation 'io.springfox:springfox-swagger2:2.9.2'
+	
+}
