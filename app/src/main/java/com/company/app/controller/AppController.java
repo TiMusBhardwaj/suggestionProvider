@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.company.app.service.WorldCityService;
+import com.company.app.service.CityService;
 
 /**
  * Rest Controller City Related information
@@ -28,15 +28,18 @@ public class AppController {
 	private static final Logger logger = LoggerFactory.getLogger(AppController.class);
 
 	@Autowired
-	private WorldCityService wcService;
+	private CityService wcService;
 
 
 	@GetMapping(path = "/suggest_cities_count")
 	@Validated
 	public List<String> suggestCities(@RequestParam("start") @NotNull String prefix,
 			@RequestParam("res") @Min(1) @Max(Integer.MAX_VALUE) int count) {
-		logger.info("Request received with parma -> start : {} , requested result count : {}", prefix, count);
-		return wcService.suggestCities(prefix, count);
+		logger.info("Request received with paramters -> start : {{}} , requested result count : {}", prefix, count);
+		List<String> list = wcService.suggestCities(prefix, count);
+		logger.info("Response count : {}", list.size());
+		logger.debug("Response List Contains : {}", list);
+		return list;
 	}
 
 }

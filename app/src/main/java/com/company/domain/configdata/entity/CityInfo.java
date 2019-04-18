@@ -7,9 +7,8 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 /**
- * Entity Mapping Class. 
- * Haven't added all the columns
  * 
+ * Enity For City information.
  * @author sumit.bhardwaj
  */
 

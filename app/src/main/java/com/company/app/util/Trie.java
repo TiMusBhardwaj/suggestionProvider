@@ -3,7 +3,18 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map.Entry;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+/**
+ * 
+ * 
+ * @author sumit.bhardwaj
+ *
+ */
 public class Trie {
+	
+	private static final Logger logger = LoggerFactory.getLogger(Trie.class);
 	
 	private ThreadLocal<Integer> resultcount = new ThreadLocal<Integer>() {
 		@Override 
@@ -25,14 +36,18 @@ public class Trie {
     }
 
     public void insert(String word) {
+    	logger.debug("Adding [ {} ] to trie ", word);
         //word = word.toLowerCase();
         if (word == null) throw new IllegalArgumentException();
         TrieNode node = root;
         char[] charArr = word.toCharArray();
         for (char c : charArr) {
+        	logger.trace("Current char [{}], currentnode :  {}", c, node);
+        	
             if (!node.children.containsKey(c)) node.add(c);
             node = node.children.get(c);
         }
+        logger.trace("Added [ {} ] to trie ", word);
         node.full = true;
         size++;
     }
@@ -60,11 +75,14 @@ public class Trie {
     
     
     public List<String> getPrefixes(TrieNode node,  int requestedCount) {
+    	logger.debug("Get Prefixed for [ {} ] , current requestCount :{}", node, requestedCount);
         ArrayList<String> results = new ArrayList<String>();
         if (node.full) {
+        	logger.trace("This node will be added to result : {}", node);
         	results.add(node.value);
         	resultcount.set(resultcount.get().intValue()+1);
         	if (resultcount.get().intValue() >= requestedCount ) {
+        		logger.debug("Get Prefixed result : {}", results);
         		return results;
         	}
         }
@@ -73,9 +91,11 @@ public class Trie {
             List<String> childPrefixes = getPrefixes(val, requestedCount);
             results.addAll(childPrefixes);
             if (resultcount.get().intValue() >= requestedCount ) {
+            	logger.debug("Get Prefixed result : {}", results);
         		return results;
         	}
         }
+        logger.debug("Get Prefixed result : {}", results);
         return results;
     }
     
@@ -91,12 +111,15 @@ public class Trie {
     }
     
     public List<String> autoComplete(String prefix, int requestedCount) {
+    	logger.debug("AutoComplete request received for [ {} ] , requestCount :{}", prefix, requestedCount);
         TrieNode node = root;
         List<String> result = new ArrayList<String>();
         for (char c : prefix.toCharArray()) {
+        	logger.trace("Current char [{}], currentnode :  {}", c, node);
             if (!node.children.containsKey(c)) return result;
             node = node.children.get(c);
         }
+        
         result = getPrefixes(node, requestedCount);
         return result;
     }
@@ -105,60 +128,5 @@ public class Trie {
         return size;
     }
     
-    // public static void main(String args[]) {
-        // Trie trie = new Trie();
-        // trie.insert("Alabama");
-        // trie.insert("Alaska");
-        // trie.insert("Arizona");
-        // trie.insert("Arkansas");
-        // trie.insert("California");
-        // trie.insert("Colorado");
-        // trie.insert("Connecticut");
-        // trie.insert("Delaware");
-        // trie.insert("Florida");
-        // trie.insert("Georgia");
-        // trie.insert("Hawaii");
-        // trie.insert("Idaho");
-        // trie.insert("Illinois");
-        // trie.insert("Indiana");
-        // trie.insert("Iowa");
-        // trie.insert("Kansas");
-        // trie.insert("Kentucky");
-        // trie.insert("Louisiana");
-        // trie.insert("Maine");
-        // trie.insert("Maryland");
-        // trie.insert("Massachusetts");
-        // trie.insert("Michigan");
-        // trie.insert("Minnesota");
-        // trie.insert("Mississippi");
-        // trie.insert("Missouri");
-        // trie.insert("Montana");
-        // trie.insert("Nebraska");
-        // trie.insert("Nevada");
-        // trie.insert("New Hampshire");
-        // trie.insert("New Jersey");
-        // trie.insert("New Mexico");
-        // trie.insert("New York");
-        // trie.insert("North Dakota");
-        // trie.insert("North Carolina");
-        // trie.insert("Ohio");
-        // trie.insert("Oklahoma");
-        // trie.insert("Oregon");
-        // trie.insert("Pennsylvania");
-        // trie.insert("Rhode Island");
-        // trie.insert("South Carolina");
-        // trie.insert("South Dakota");
-        // trie.insert("Tennessee");
-        // trie.insert("Texas");
-        // trie.insert("Utah");
-        // trie.insert("Vermont");
-        // trie.insert("Virginia");
-        // trie.insert("Washington");
-        // trie.insert("West Virginia");
-        // trie.insert("Wisconsin");
-        // trie.insert("Wyoming");
-        // List<String> results = trie.autoComplete("a");
-        // System.out.println(results.toString());
-
-    // }
+   
 }
