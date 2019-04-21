@@ -1,9 +1,12 @@
 plugins {
 	id 'org.springframework.boot' version '2.1.4.RELEASE'
 	id 'java'
+	id 'application'
 }
 
 apply plugin: 'io.spring.dependency-management'
+
+mainClassName = "com.company.app.AppApplication"
 
 group = 'com.company'
 version = '0.0.0.1'
@@ -29,7 +32,6 @@ dependencies {
 	
 	//DATABASE AND DB ACCESS ABSTRACTIONS
 	runtimeOnly 'com.h2database:h2'
-	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 	
 	//LOGGING AND TRACING
@@ -40,4 +42,18 @@ dependencies {
 	implementation 'io.springfox:springfox-swagger-ui:2.9.2'
 	implementation 'io.springfox:springfox-swagger2:2.9.2'
 	
+	compile group: 'org.apache.commons', name: 'commons-collections4', version: '4.3'
+	
+	
+	//TEST
+	testImplementation 'org.mockito:mockito-core'
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	
+}
+
+tasks.withType(CreateStartScripts).each { task ->
+    task.doLast {
+        task.windowsScript.write task.windowsScript.text.replaceFirst(/(set CLASSPATH=%APP_HOME%\\lib\\).*/, { "${it[1]}*" })
+        task.unixScript.write task.unixScript.text.replaceFirst(/(CLASSPATH=.APP_HOME\/lib\/).*/, { "CLASSPATH=\$(echo \$APP_HOME/lib/*.jar | tr ' ' ':')" })
+    }
 }

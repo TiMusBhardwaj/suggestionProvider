@@ -10,6 +10,13 @@ import java.util.List;
  */
 public interface AutoCompleteService {
 	
+	
+	/**
+	 * Initialize the data structure needed to store information
+	 * 
+	 */
+	public void intilaize();
+	
 	/**
 	 * @param prefix
 	 * @param requestedCount

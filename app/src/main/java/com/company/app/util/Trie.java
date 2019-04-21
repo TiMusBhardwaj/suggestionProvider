@@ -8,6 +8,28 @@ import org.slf4j.LoggerFactory;
 
 /**
  * 
+ *TODO: Working on Patricia tree to return only required number of elements.
+ *Its is compact trie will save a lot of memory
+ *Trie will work for now.
+ * 
+ * 
+ * A Trie is a special data structure used to store strings that can be visualized like a graph. 
+ * It consists of nodes and edges. Each node consists of at max 26 children and edges 
+ * connect each parent node to its children. These 26 pointers are nothing but pointers for each 
+ * of the 26 letters of the English alphabet A separate edge is maintained for every edge.
+ * 
+ * 
+ * I could have used ternary tree to save space, but memory used here is very small so 
+ * sacrificing speed for memory optimization is not worth it.
+ * 
+ * 
+ * 
+ * I could have used Alphabet array here to save space.
+ * Reason for not using the same is that, some cities in world have special char in their name.
+ * All those char were difficult to know if is a little difficult to know. 
+ * As i dont which country will be used for city info
+ * So to avoid those issues i have decided not to use alphabet array.
+ * 
  * 
  * @author sumit.bhardwaj
  *
@@ -30,10 +52,7 @@ public class Trie {
         size = 0;
     }
 
-    public Trie(String value) {
-        root = new TrieNode(value);
-        size = 0;
-    }
+   
 
     /**
      * This Method add the input string to trie by breaking it down in char array.
@@ -42,7 +61,7 @@ public class Trie {
     public void insert(String word) {
     	logger.debug("Adding [ {} ] to trie ", word);
         //word = word.toLowerCase();
-        if (word == null) throw new IllegalArgumentException();
+        if (word == null || word.isEmpty()) throw new IllegalArgumentException();
         TrieNode node = root;
         char[] charArr = word.trim().toCharArray();
         for (char c : charArr) {
@@ -52,13 +71,14 @@ public class Trie {
             node = node.children.get(c);
         }
         logger.trace("Added [ {} ] to trie ", word);
+        if (!node.full)size++;
         node.full = true;
-        size++;
+        
     }
 
     //TODO: Instead of passing requestcount and 
     //incrementing threadlocal should decrement threadlocal to zero
-    public List<String> getPrefixes(TrieNode node,  int requestedCount) {
+    private List<String> getPrefixes(TrieNode node,  int requestedCount) {
     	logger.debug("Get Prefixed for [ {} ] , current requestCount :{}", node, requestedCount);
         ArrayList<String> results = new ArrayList<String>();
         if (node.full) {

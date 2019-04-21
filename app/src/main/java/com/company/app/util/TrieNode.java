@@ -3,10 +3,7 @@ import java.util.*;
 
 
 /**
- * I need use Alphabet array here to save space.
- * Reason for that is some cities in world have special char in their name.
- * So to avoid those issues i have decided not to use alphanbet array.
- * 
+ *
  * @author sumit.bhardwaj
  *
  */

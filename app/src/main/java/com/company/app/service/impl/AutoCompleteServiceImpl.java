@@ -32,6 +32,8 @@ public class AutoCompleteServiceImpl implements AutoCompleteService {
 	
 	/**
 	 * This Method will Initialize your Trie Data structure.
+	 * Empty and Null are removed
+	 * Words are trimmed and Capatilized befor being added to Trie.
 	 * We can refresh our Trie by calling this method after database update.
 	 * 
 	 */
@@ -42,7 +44,7 @@ public class AutoCompleteServiceImpl implements AutoCompleteService {
 		logger.info("-----Populating Trie Start--------");
 		try(Stream<String> cities = cityInfoRepository.getAllCities()){
 			Trie trie = new Trie();
-			cities.filter(x -> x != null && !x.isEmpty()).forEach(x->trie.insert(x.trim().toUpperCase()));
+			cities.filter(x -> x != null && !x.trim().isEmpty()).forEach(x->trie.insert(x.trim().toUpperCase()));
 			this.trie = trie;
 			
 		}
@@ -52,7 +54,8 @@ public class AutoCompleteServiceImpl implements AutoCompleteService {
 
 	
 	
-	/* (non-Javadoc)
+	/* 
+	 * (non-Javadoc)
 	 * @see com.company.app.service.AutoCompleteService#getSuggestion(java.lang.String, int)
 	 */
 	@Override
@@ -63,6 +66,10 @@ public class AutoCompleteServiceImpl implements AutoCompleteService {
 		
 		logger.debug("Suggested List : {}", suggestions);
 		return suggestions;
+	}
+	
+	public int getTrieSize() {
+		return trie.size();
 	}
 
 }
